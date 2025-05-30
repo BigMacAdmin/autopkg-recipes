@@ -36,16 +36,12 @@
 		<string></string>
 		<key>pkginfo</key>
 		<dict>
-			<key>blocking_applications</key>
-			<array>
-				<string>DNSFilter Agent.app</string>
-			</array>
 			<key>catalogs</key>
 			<array>
 				<string>testing</string>
 			</array>
 			<key>description</key>
-			<string>Popular multimedia player.</string>
+			<string>Block Threats At the DNS Level.</string>
 			<key>developer</key>
 			<string>DNSFilter, Inc.</string>
 			<key>display_name</key>
