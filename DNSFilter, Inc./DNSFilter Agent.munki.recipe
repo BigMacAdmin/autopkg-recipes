@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Comment</key>
+	<string>This is a BETA test recipe.
+	Created with Recipe Robot v2.3.2 (https://github.com/homebysix/recipe-robot)
+	This recipe  checks whether or not DNSFilter is installed and active. It does not do updates, instead relying on the built in DNSFilter update engine.
+	
+	Define the DNSFilter Site Secret Key Deployment Code as an Input in your override for this to work in your environment.
+	</string>
+	<key>Description</key>
+	<string>Downloads the latest version of DNSFilter Agent and imports it into Munki.</string>
+	<key>Identifier</key>
+	<string>com.bigmacadmin.munki.DNSFilterAgent</string>
+	<key>Inpout</key>
+	<dict>
+		<key>pkginfo</key>
+		<dict>
+			<key>unattended_install</key>
+			<true/>
+			<key>unattended_uninstall</key>
+			<true/>
+		</dict>
+	</dict>
+	<key>Input</key>
+	<dict>
+		<key>MUNKI_REPO_SUBDIR</key>
+		<string>apps/%NAME%</string>
+		<key>NAME</key>
+		<string>DNSFilter Agent</string>
+		<key>SITE_SECRET_KEY</key>
+		<string></string>
+		<key>pkginfo</key>
+		<dict>
+			<key>blocking_applications</key>
+			<array>
+				<string>DNSFilter Agent.app</string>
+			</array>
+			<key>catalogs</key>
+			<array>
+				<string>testing</string>
+			</array>
+			<key>description</key>
+			<string>Popular multimedia player.</string>
+			<key>developer</key>
+			<string>DNSFilter, Inc.</string>
+			<key>display_name</key>
+			<string>DNSFilter Agent</string>
+			<key>installcheck_script</key>
+			<string>#!/bin/zsh --no-rcs
+# shellcheck shell=bash
+set -x
+
+# DNSFilter-InstallCheck.sh by: Trevor Sysock
+# 2025-05-30
+# v.2.0
+
+# Munki wiki: https://github.com/munki/munki/wiki/How-Munki-Decides-What-Needs-To-Be-Installed#install-check-script
+# An installcheck_script should be crafted such that an exit code of 0 indicates that the item 
+# is currently NOT installed and should therefore be installed. All non-zero exit codes indicate 
+# that the item in question is installed.
+
+# This script will determine whether DNSFilter needs to be installed or re-installed
+# Checks for LaunchAgent/Daemon status
+# Checks for app bundle presence
+
+# Syntax:
+#   Variables and arrays are camel case: $thisIsAVariable
+#   Functions are snake case: this_is_a_function
+#   Functions are declared with the declaration of function this_is_a_function(){}
+
+#################
+#   Variables   #
+#################
+reinstallApp=false
+
+requiredAppPath=/Applications/DNSFilter Agent.app
+
+requiredLaunchDaemonList=(
+    com.dnsfilter.agent.macos.helper
+)
+
+##########################
+#   Script Starts Here   #
+##########################
+
+if [ ! -d $requiredAppPath ]; then
+    reinstallApp=true
+fi
+
+if ! $reinstallApp; then
+    # Check if Munki LaunchD items are enabled
+    launchDList=$(launchctl list | grep -v com.apple | awk {print $3})
+
+    # Iterate over each label in the requiredLaunchDList array
+    for label in ${requiredLaunchDaemonList[@]}; do
+        # Check if the current label exists in the launchDList
+        if echo ${launchDList} | grep -q ${label} ; then
+            # If the label is found, do nothing (true is a no-op)
+            true
+        else
+            # If the label is not found, print a message and set reinstallApp to true
+            echo LaunchD label missing. Setting install to true: ${label}
+            reinstallApp=true
+        fi
+    done
+fi
+
+if $reinstallApp; then
+    exit 0
+else
+    exit 1
+fi</string>
+			<key>name</key>
+			<string>%NAME%</string>
+			<key>preinstall_script</key>
+			<string>#!/bin/zsh --no-rcs
+# shellcheck shell=bash
+#set -x
+
+# DNSFilter-preinstall_script.sh by: Trevor Sysock
+# 2025-05-30
+# v.1.0
+
+# This script is based off the deployment script provided by DNSFilter as of 2025-05-30 for v2.2 and higher.
+# https://help.dnsfilter.com/hc/en-us/articles/41062760716307-Install-macOS-Roaming-Client-v2-2-0-or-higher
+
+# Syntax:
+#   Variables and arrays are camel case: $thisIsAVariable
+#   Functions are snake case: this_is_a_function
+#   Functions are declared with the declaration of function this_is_a_function(){}
+
+#################
+#   Variables   #
+#################
+siteKey=%SITE_SECRET_KEY%
+
+munkiCacheFolder=/Library/Managed Installs/Cache
+configFile=$munkiCacheFolder/dns_agent.conf
+##########################
+#   Script Starts Here   #
+##########################
+if [ -z $siteKey ]; then
+    echo Site Secret Key is not set. Exiting preinstall script.
+    exit 1
+else
+    echo Site Secret Key is set to: $siteKey
+fi
+
+# If a config file already exists, delete it
+if [ -f $configFile ]; then
+    echo Removing existing config file: $configFile
+    rm -f $configFile
+fi
+
+# Create temporary config file
+cat &gt; $configFile &lt;&lt; EOF
+SITE_SECRET_KEY=$siteKey
+LOCAL_DNS_AND_DOMAINS=
+OVERRIDE_CONFIG_FILE=yes
+EOF
+
+# Flush DNS cache
+dscacheutil -flushcache
+killall -HUP mDNSResponder || true
+killall mDNSResponderHelper || true
+
+exit 0</string>
+			<key>unattended_install</key>
+			<true/>
+			<key>uninstall_script</key>
+			<string>#!/bin/zsh --no-rcs
+# shellcheck shell=bash
+#set -x
+
+# DNSFilter-uninstall_script.sh by: Trevor Sysock
+# 2025-05-30
+# v.1.0
+
+# Based off of DNSFilter documentation found here: https://help.dnsfilter.com/hc/en-us/articles/24995984792339-Uninstall-macOS-Roaming-Clients-v1-8-6-and-older#h_01HA4Y3BZ9M0RXT4NZSFD3GZMV
+
+sh /Applications/DNSFilter Agent.app/Contents/Resources/uninstall.sh</string>
+		</dict>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>ParentRecipe</key>
+	<string>com.bigmacadmin.download.DNSFilterAgent</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_path</key>
+				<string>%pathname%</string>
+				<key>repo_subdirectory</key>
+				<string>%MUNKI_REPO_SUBDIR%</string>
+			</dict>
+			<key>Processor</key>
+			<string>MunkiImporter</string>
+		</dict>
+	</array>
+</dict>
+</plist>
