@@ -157,8 +157,6 @@ configFile=&quot;$munkiCacheFolder/dns_agent.conf&quot;
 if [ -z &quot;$siteKey&quot; ]; then
     echo &quot;Site Secret Key is not set. Exiting preinstall script.&quot;
     exit 1
-else
-    echo &quot;Site Secret Key is set to: $siteKey&quot;
 fi
 
 # If a config file already exists, delete it
