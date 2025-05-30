@@ -8,6 +8,7 @@
 	This recipe  checks whether or not DNSFilter is installed and active. It does not do updates, instead relying on the built in DNSFilter update engine.
 	
 	Define the DNSFilter Site Secret Key Deployment Code as an Input in your override for this to work in your environment.
+	The "SITE_SECRET_KEY_DESCRIPTION" gets added to the name value to allow for multiple site keys to exist in your munki repo.
 	</string>
 	<key>Description</key>
 	<string>Downloads the latest version of DNSFilter Agent and imports it into Munki.</string>
@@ -30,6 +31,8 @@
 		<key>NAME</key>
 		<string>DNSFilter Agent</string>
 		<key>SITE_SECRET_KEY</key>
+		<string></string>
+		<key>SITE_SECRET_KEY_DESCRIPTION</key>
 		<string></string>
 		<key>pkginfo</key>
 		<dict>
@@ -113,7 +116,7 @@ else
     exit 1
 fi</string>
 			<key>name</key>
-			<string>%NAME%</string>
+			<string>%NAME%-%SITE_SECRET_KEY_DESCRIPTION%</string>
 			<key>preinstall_script</key>
 			<string>#!/bin/zsh --no-rcs
 # shellcheck shell=bash
