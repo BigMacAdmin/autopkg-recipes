@@ -21,7 +21,7 @@
                 <key>url</key>
                 <string>%DOWNLOAD_JSON_URL%</string>
                 <key>re_pattern</key>
-                <string>"mac-link"\s*:\s*"([^"]+\.dmg)"</string>
+                <string>"bac"\s*:\s*{[^}]*"mac-link"\s*:\s*"([^"]+\.dmg)"</string>
                 <key>result_output_var_name</key>
                 <string>found_url</string>
             </dict>
