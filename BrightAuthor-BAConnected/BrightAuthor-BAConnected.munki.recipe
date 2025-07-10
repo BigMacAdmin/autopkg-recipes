@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Identifier</key>
+    <string>com.github.bigmacadmin.munki.BrightAuthor-BAConnected</string>
+    <key>Description</key>
+    <string>Imports BrightAuthor:connected into Munki, using the download recipe as a parent.</string>
+    <key>ParentRecipe</key>
+    <string>com.github.bigmacadmin.download.BrightAuthor-BAConnected</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>BrightAuthorConnected</string>
+        <key>MUNKI_REPO_SUBDIR</key>
+        <string>apps</string>
+    </dict>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>MunkiImporter</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_path</key>
+                <string>%pathname%</string>
+                <key>repo_subdirectory</key>
+                <string>%MUNKI_REPO_SUBDIR%</string>
+                <key>munki_importer_pkgname</key>
+                <string>%NAME%</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
