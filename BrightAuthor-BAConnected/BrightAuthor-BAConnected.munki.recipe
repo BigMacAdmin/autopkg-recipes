@@ -7,7 +7,7 @@
     <key>Description</key>
     <string>Imports BrightAuthor:connected into Munki, using the download recipe as a parent.</string>
     <key>ParentRecipe</key>
-    <string>com.github.bigmacadmin.download.BrightAuthor-BAConnected.download</string>
+    <string>com.github.bigmacadmin.download.BrightAuthor-BAConnected</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
