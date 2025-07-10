@@ -21,9 +21,22 @@
                 <key>url</key>
                 <string>%DOWNLOAD_JSON_URL%</string>
                 <key>re_pattern</key>
-                <string>"bac"\s*:\s*{[^}]*"mac-link"\s*:\s*"([^"]+\.dmg)"</string>
+                <string>mac-link"\s*:\s*"([^"]+\.dmg)</string>
                 <key>result_output_var_name</key>
                 <string>found_url</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.homebysix.FindAndReplace/FindAndReplace</string>
+            <key>Arguments</key>
+            <dict>
+                <key>find</key>
+                <string> </string>
+                <key>input_string</key>
+                <string>%found_url%</string>
+                <key>replace</key>
+                <string>%20</string>
             </dict>
         </dict>
         <dict>
@@ -32,7 +45,7 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>%found_url%</string>
+                <string>%output_string%</string>
                 <key>filename</key>
                 <string>BrightAuthorConnected.dmg</string>
             </dict>
