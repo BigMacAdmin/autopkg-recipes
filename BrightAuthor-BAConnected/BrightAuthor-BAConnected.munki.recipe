@@ -14,6 +14,25 @@
         <string>BrightAuthorConnected</string>
         <key>MUNKI_REPO_SUBDIR</key>
         <string>apps</string>
+		<key>pkginfo</key>
+		<dict>
+			<key>catalogs</key>
+			<array>
+				<string>testing</string>
+			</array>
+			<key>category</key>
+			<string>Creative</string>
+			<key>description</key>
+			<string>Simplify signage management with brightAuthor connected and bsn.Control.</string>
+			<key>developer</key>
+			<string>BrightSign</string>
+			<key>display_name</key>
+			<string>BrightAuthor Connected</string>
+			<key>name</key>
+			<string>%NAME%</string>
+			<key>unattended_install</key>
+			<true/>
+		</dict>
     </dict>
     <key>Process</key>
     <array>
